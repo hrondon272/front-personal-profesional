@@ -1,0 +1,135 @@
+/* Variables de colores */
+$colorPrimario: #1976d2;
+
+h1{
+    font-family: 'Roboto', sans-serif;
+    color: $colorPrimario;
+}
+
+/*Clases de Margenes*/
+
+.mt1{
+    margin-top: 0.8rem !important;
+}
+
+.mb1{
+    margin-bottom: 0.8rem !important;
+}
+
+.ml1{
+    margin-left: 0.8rem !important;
+}
+
+.mr1{
+    margin-right: 0.8rem !important;
+}
+
+.m1{
+    margin: 0.8rem !important;
+}
+
+
+.mx1{
+    @extend .ml1,.mr1;
+}
+
+.my1{
+    @extend .mt1, .mb1;
+}
+
+
+.mt2{
+    margin-top: 1.3rem !important;
+}
+
+.mb2{
+    margin-bottom: 1.3rem !important;
+}
+
+.ml2{
+    margin-left: 1.3rem !important;
+}
+
+.mr2{
+    margin-right: 1.3rem !important;
+}
+
+.m2{
+    margin: 1.3rem !important;
+}
+
+.mx2{
+    @extend .ml2,.mr2;
+}
+
+.my2{
+    @extend .mt2, .mb2;
+}
+
+/* Clases de Paddings */
+
+.pt1{
+    padding-top: 0.8rem !important;
+}
+
+.pb1{
+    padding-bottom: 0.8rem !important;
+}
+
+.pl1{
+    padding-left: 0.8rem !important;
+}
+
+.pr1{
+    padding-right: 0.8rem !important;
+}
+
+.p1{
+    padding: 0.8rem !important;
+}
+
+
+.px1{
+    @extend .pl1,.pr1;
+}
+
+.py1{
+    @extend .pt1, .pb1;
+}
+
+
+.pt2{
+    padding-top: 1.3rem !important;
+}
+
+.pb2{
+    padding-bottom: 1.3rem !important;
+}
+
+.pl2{
+    padding-left: 1.3rem !important;
+}
+
+.pr2{
+    padding-right: 1.3rem !important;
+}
+
+.p2{
+    padding: 1.3rem !important;
+}
+
+
+.px2{
+    @extend .pl2,.pr2;
+}
+
+.py2{
+    @extend .pt2, .pb2;
+}
+
+/* Clases de Tamaños */
+
+.w100{
+    width: 95%;
+}
+
