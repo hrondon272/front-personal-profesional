@@ -4,9 +4,10 @@ import { Card, Button, TextField, Grid } from "@mui/material";
 import '../styles.scss'
 import { loginContext } from "../routes/Router";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  
+  const navigate = useNavigate();
   //Se obtiene el metodo del contexto
   const { setToken } = useContext(loginContext);
 
@@ -24,7 +25,7 @@ const Login = () => {
 
     var config = {
       method: "post",
-      url: "",
+      url: "http://127.0.0.1:8000/api/userLogin",
       headers: {
         "Content-Type": "application/json",
         "APP-KEY":"Ke9HAnknaQfYo%EPa7sjG^G3jknZ9ThFANZXgV$t4Nvca%XDy@35VWhwKSP37pTAm4F6CVDHL7$c3v3qBWM4hg7Kx@tsW$pTe9U726UyD&2njqtKnaSHbw9C",
@@ -35,8 +36,9 @@ const Login = () => {
     axios(config)
       .then(async function (response) {
         if (response.data.respuesta === 1) {
+          localStorage.setItem('token', JSON.stringify(response.data.access_token))
           setToken(response.data.access_token);
-          
+          navigate("/add")
         } else {
           setToken(null)
         }
@@ -50,7 +52,7 @@ const Login = () => {
   return (
     <Container className="my2" sx={{display:'flex',justifyContent:'center', alignItems:'center', minHeight:'100vh'}}>
       <Grid container justifyContent="center" >
-        <Grid item md={6} direction="column">
+        <Grid item md={6}>
           <Card className="p2">
             <Grid container direction='column' justifyContent="center">
                 <h1>Inicia Sesión</h1>
@@ -69,6 +71,7 @@ const Login = () => {
                   onChange={(e) => setPass(e.target.value)}
                   label="Contraseña"
                   variant="outlined"
+                  type="password"
                 />
                 <Button className="m1" variant="contained" onClick={iniciarSesion}>Iniciar Sesión</Button>
             </Grid>

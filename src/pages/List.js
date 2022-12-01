@@ -12,7 +12,6 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
-import Button from "@mui/material/Button";
 import ModalEditar from "../components/ModalEditar";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
@@ -34,7 +33,7 @@ const List = () => {
   const obtenerDatosTabla = () => {
     var config = {
       method: "get",
-      url: ``,
+      url: `http://127.0.0.1:8000/api/cargarPersonalProfesional`,
       headers: {
         "Content-Type": "application/json",
         "APP-KEY":
@@ -45,7 +44,7 @@ const List = () => {
 
     axios(config)
       .then(function (response) {
-        setDatosTabla(response);
+        setDatosTabla(response.data.response);
       })
       .catch(function (error) {
         console.log(error);
@@ -58,16 +57,27 @@ const List = () => {
   };
 
   const eliminar = (item) => {
-    let infoVehiculo = item.vehiculo.split("-");
-    var data = JSON.stringify({
-      profesion: item.profesion,
-      nombre_vehiculo: infoVehiculo[0],
-      marca: infoVehiculo[1],
-      año: infoVehiculo[2],
-    });
+    try {
+      var data = JSON.stringify({
+        id: item.id,
+        profesion: item.profesion,
+        nombre_vehiculo: item.nombre_vehiculo,
+        marca: item.marca,
+        año: item.año,
+      });
+    } catch (error) {
+      data = JSON.stringify({
+        id: "",
+        profesion: "",
+        nombre_vehiculo: "",
+        marca: "",
+        año: "",
+      });
+    }
+
     var config = {
       method: "delete",
-      url: ``,
+      url: `http://127.0.0.1:8000/api/eliminarPersonalProfesional`,
       headers: {
         "Content-Type": "application/json",
         "APP-KEY":
@@ -78,8 +88,7 @@ const List = () => {
     };
 
     axios(config)
-      .then(function (response) {
-        console.log(response);
+      .then(function () {
         obtenerDatosTabla();
       })
       .catch(function (error) {
@@ -109,7 +118,7 @@ const List = () => {
         }}
       >
         <Grid container justifyContent="center">
-          <Grid item md={10} direction="column">
+          <Grid item md={10}>
             <Card className="p2">
               <h1>Lista de Personal</h1>
 
@@ -141,18 +150,24 @@ const List = () => {
                           }}
                         >
                           <TableCell component="th" scope="row">
-                            {fila.nombre + " " + fila.apellido}
+                            {fila.nombre_completo}
                           </TableCell>
                           <TableCell align="right">{fila.cedula}</TableCell>
                           <TableCell align="right">
-                            {fila.fechaNacimiento}
+                            {fila.fecha_nacimiento}
                           </TableCell>
                           <TableCell align="right">{fila.profesion}</TableCell>
                           <TableCell align="right">{fila.direccion}</TableCell>
                           <TableCell align="right">{fila.municipio}</TableCell>
                           <TableCell align="right">{fila.telefono}</TableCell>
                           <TableCell align="right">{fila.sexo}</TableCell>
-                          <TableCell align="right">{fila.vehiculo}</TableCell>
+                          <TableCell align="right">
+                            {fila.nombre_vehiculo +
+                              " - " +
+                              fila.marca +
+                              " - " +
+                              fila.año}
+                          </TableCell>
                           <TableCell align="right">
                             {
                               <>

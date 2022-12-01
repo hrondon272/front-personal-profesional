@@ -42,17 +42,18 @@ const ModalEditar = ({ open, handleClose, item, obtenerDatosTabla }) => {
   const obtenerVehiculos = () => {
     var config = {
       method: "get",
-      url: ``,
+      url: `http://127.0.0.1:8000/api/cargarVehiculos`,
       headers: {
         "Content-Type": "application/json",
-        "APP-KEY": "Ke9HAnknaQfYo%EPa7sjG^G3jknZ9ThFANZXgV$t4Nvca%XDy@35VWhwKSP37pTAm4F6CVDHL7$c3v3qBWM4hg7Kx@tsW$pTe9U726UyD&2njqtKnaSHbw9C",
+        "APP-KEY":
+          "Ke9HAnknaQfYo%EPa7sjG^G3jknZ9ThFANZXgV$t4Nvca%XDy@35VWhwKSP37pTAm4F6CVDHL7$c3v3qBWM4hg7Kx@tsW$pTe9U726UyD&2njqtKnaSHbw9C",
         Authorization: `Bearer ${token}`,
       },
     };
 
     axios(config)
       .then(function (response) {
-        setListaVehiculos(response);
+        setListaVehiculos(response.data.response);
       })
       .catch(function (error) {
         console.log(error);
@@ -62,42 +63,57 @@ const ModalEditar = ({ open, handleClose, item, obtenerDatosTabla }) => {
   const obtenerProfesiones = () => {
     var config = {
       method: "get",
-      url: ``,
+      url: `http://127.0.0.1:8000/api/cargarProfesiones`,
       headers: {
         "Content-Type": "application/json",
-        "APP-KEY": "Ke9HAnknaQfYo%EPa7sjG^G3jknZ9ThFANZXgV$t4Nvca%XDy@35VWhwKSP37pTAm4F6CVDHL7$c3v3qBWM4hg7Kx@tsW$pTe9U726UyD&2njqtKnaSHbw9C",
+        "APP-KEY":
+          "Ke9HAnknaQfYo%EPa7sjG^G3jknZ9ThFANZXgV$t4Nvca%XDy@35VWhwKSP37pTAm4F6CVDHL7$c3v3qBWM4hg7Kx@tsW$pTe9U726UyD&2njqtKnaSHbw9C",
         Authorization: `Bearer ${token}`,
       },
     };
 
     axios(config)
       .then(function (response) {
-        setListaProfesiones(response);
+        setListaProfesiones(response.data.response);
       })
       .catch(function (error) {
         console.log(error);
       });
   };
 
-  const definirCampos = ()=>{
-    setNombre(item.nombre)
-    setApellido(item.apellido)
-    setCedula(item.cedula)
-    setNacimiento(item.fecha_nacimiento)
-    setProfesion(item.profesion)
-    setDireccion(item.direccion)
-    setMunicipio(item.municipio)
-    setTelefono(item.telefono)
-    setSexo(item.sexo)
-    setVehiculo(item.vehiculo)
-}
+  const definirCampos = () => {
+    try {
+      let nombre = item.nombre_completo.split(" ");
+      setNombre(nombre[0]);
+      setApellido(nombre[1]);
+      setCedula(item.cedula);
+      setNacimiento(item.fecha_nacimiento);
+      setProfesion(item.profesion);
+      setDireccion(item.direccion);
+      setMunicipio(item.municipio);
+      setTelefono(item.telefono);
+      setSexo(item.sexo);
+      setVehiculo(item.nombre_vehiculo + " - " + item.marca + " - " + item.año);
+    } catch (error) {
+      setNombre('');
+      setApellido('');
+      setCedula('');
+      setNacimiento('');
+      setProfesion('');
+      setDireccion('');
+      setMunicipio('');
+      setTelefono('');
+      setSexo('');
+      setVehiculo('');
+    }
+  };
 
   const editar = () => {
-    let infoVehiculo = vehiculo.split('-')
+    let infoVehiculo = vehiculo.split("-");
     var data = JSON.stringify({
       id: item.id,
       nombre: nombre,
-      apellido:apellido,
+      apellido: apellido,
       cedula: cedula,
       fecha_nacimiento: nacimiento,
       profesion: profesion,
@@ -107,28 +123,28 @@ const ModalEditar = ({ open, handleClose, item, obtenerDatosTabla }) => {
       sexo: sexo,
       nombre_vehiculo: infoVehiculo[0],
       marca: infoVehiculo[1],
-      año: infoVehiculo[2]
+      año: infoVehiculo[2],
     });
     var config = {
-        method: "put",
-        url: ``,
-        headers: {
-          "Content-Type": "application/json",
-          "APP-KEY": "Ke9HAnknaQfYo%EPa7sjG^G3jknZ9ThFANZXgV$t4Nvca%XDy@35VWhwKSP37pTAm4F6CVDHL7$c3v3qBWM4hg7Kx@tsW$pTe9U726UyD&2njqtKnaSHbw9C",
-          Authorization: `Bearer ${token}`,
-        },
-        data:data
-      };
-  
-      axios(config)
-        .then(function (response) {
-          console.log(response)
-          handleClose()
-          obtenerDatosTabla()
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+      method: "put",
+      url: `http://127.0.0.1:8000/api/actualizarPersonalProfesional`,
+      headers: {
+        "Content-Type": "application/json",
+        "APP-KEY":
+          "Ke9HAnknaQfYo%EPa7sjG^G3jknZ9ThFANZXgV$t4Nvca%XDy@35VWhwKSP37pTAm4F6CVDHL7$c3v3qBWM4hg7Kx@tsW$pTe9U726UyD&2njqtKnaSHbw9C",
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(function (response) {
+        handleClose();
+        obtenerDatosTabla();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   useEffect(() => {
@@ -136,9 +152,9 @@ const ModalEditar = ({ open, handleClose, item, obtenerDatosTabla }) => {
     obtenerVehiculos();
   }, []);
 
-  useEffect(()=>{
-    definirCampos()
-  },[open])
+  useEffect(() => {
+    definirCampos();
+  }, [open]);
 
   return (
     <Modal
@@ -148,7 +164,7 @@ const ModalEditar = ({ open, handleClose, item, obtenerDatosTabla }) => {
       aria-describedby="modal-modal-description"
     >
       <Card sx={style} className="m2">
-        <h1>Editar</h1>
+        <h1>Actualizar</h1>
         <TextField
           className="m1 w100"
           id="outlined-basic"
@@ -252,14 +268,14 @@ const ModalEditar = ({ open, handleClose, item, obtenerDatosTabla }) => {
         >
           {listaVehiculos.map((item, index) => {
             return (
-              <MenuItem key={index} value={item.nombre}>
-                {item.nombre}
+              <MenuItem key={index} value={item.vehiculo}>
+                {item.vehiculo}
               </MenuItem>
             );
           })}
         </TextField>
         <Button className="m1" variant="contained" onClick={editar}>
-          Editar
+          Actualizar
         </Button>
       </Card>
     </Modal>

@@ -7,7 +7,7 @@ import axios from "axios";
 import { loginContext } from "../routes/Router";
 import Fab from "@mui/material/Fab";
 import { Link } from "react-router-dom";
-import ViewListIcon from '@mui/icons-material/ViewList';
+import ViewListIcon from "@mui/icons-material/ViewList";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import "../styles.scss";
@@ -38,7 +38,7 @@ const AddForm = () => {
   const obtenerVehiculos = () => {
     var config = {
       method: "get",
-      url: ``,
+      url: `http://127.0.0.1:8000/api/cargarVehiculos`,
       headers: {
         "Content-Type": "application/json",
         "APP-KEY":
@@ -49,7 +49,7 @@ const AddForm = () => {
 
     axios(config)
       .then(function (response) {
-        setListaVehiculos(response);
+        setListaVehiculos(response.data.response);
       })
       .catch(function (error) {
         console.log(error);
@@ -59,7 +59,7 @@ const AddForm = () => {
   const obtenerProfesiones = () => {
     var config = {
       method: "get",
-      url: ``,
+      url: `http://127.0.0.1:8000/api/cargarProfesiones`,
       headers: {
         "Content-Type": "application/json",
         "APP-KEY":
@@ -70,7 +70,7 @@ const AddForm = () => {
 
     axios(config)
       .then(function (response) {
-        setListaProfesiones(response);
+        setListaProfesiones(response.data.response);
       })
       .catch(function (error) {
         console.log(error);
@@ -78,8 +78,10 @@ const AddForm = () => {
   };
 
   const registrar = () => {
+    
+
     let infoVehiculo = vehiculo.split("-");
-    var data = JSON.stringify({
+    var data = {
       nombre: nombre,
       apellido: apellido,
       cedula: cedula,
@@ -92,27 +94,42 @@ const AddForm = () => {
       nombre_vehiculo: infoVehiculo[0],
       marca: infoVehiculo[1],
       año: infoVehiculo[2],
-    });
+    };
 
     var config = {
       method: "post",
-      url: "",
+      url: "http://127.0.0.1:8000/api/registrarPersonalProfesional",
       headers: {
         "Content-Type": "application/json",
         "APP-KEY":
           "Ke9HAnknaQfYo%EPa7sjG^G3jknZ9ThFANZXgV$t4Nvca%XDy@35VWhwKSP37pTAm4F6CVDHL7$c3v3qBWM4hg7Kx@tsW$pTe9U726UyD&2njqtKnaSHbw9C",
+        Authorization: `Bearer ${token}`,
       },
-      Authorization: `Bearer ${token}`,
+
       data: data,
     };
 
     axios(config)
-      .then(async function (response) {
-        console.log(JSON.stringify(response.data));
+      .then(async function () {
+          limpiarCampos();
+          alert("Registrado correctamente");
       })
       .catch(function (error) {
         console.log(error);
       });
+  };
+
+  const limpiarCampos = () => {
+    setNombre("");
+    setApellido("");
+    setCedula("");
+    setDireccion("");
+    setNacimiento("");
+    setProfesion("");
+    setMunicipio("");
+    setTelefono("");
+    setSexo("");
+    setVehiculo("");
   };
 
   useEffect(() => {
@@ -132,7 +149,7 @@ const AddForm = () => {
         }}
       >
         <Grid container justifyContent="center">
-          <Grid item md={10} direction="column">
+          <Grid item md={10}>
             <Card className="p2">
               <h1>Registrar Personal</h1>
               <FormControl>
@@ -266,8 +283,8 @@ const AddForm = () => {
                     >
                       {listaVehiculos.map((item, index) => {
                         return (
-                          <MenuItem key={index} value={item.nombre}>
-                            {item.nombre}
+                          <MenuItem key={index} value={item.vehiculo}>
+                            {item.vehiculo}
                           </MenuItem>
                         );
                       })}
